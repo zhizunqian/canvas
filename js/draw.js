@@ -1,6 +1,7 @@
 var canvas=document.querySelector("#canvas");
 var ctx=canvas.getContext("2d");
 //rect
+ctx.save();
 ctx.fillStyle="#000";
 ctx.fillRect(150,150,100,100);
 ctx.fillStyle="#f00";
@@ -70,6 +71,7 @@ for(var i=0;i<1000;i++){
 }
 ctx.clearRect(0,0,1000,500);
 
+ctx.save();
 var x=0,y=20,sheed=1;
 var draw=function(){
 	ctx.clearRect(0,0,1000,500);
@@ -84,10 +86,178 @@ var draw=function(){
 	ctx.arc(x,y,10,0,Math.PI*2);
 	ctx.fill();
 }
-setInterval(draw,1);
+//setInterval(draw,1);
+ctx.restore();
+
+ctx.clearRect(0,0,1000,500);
 //画布叠加
-var canvas1=document.querySelector("#canvas1");
-var ctx1=canvas1.getContext("2d");
+//var canvas1=document.querySelector("#canvas1");
+//var ctx1=canvas1.getContext("2d");
 for(var i=0;i<10;i++){
-	ctx1.fillRect(i*150,0,100,100);
+	//ctx1.fillRect(i*150,0,100,100);
 }
+//ctx1.clearRect(0,0,1000,500);
+ctx.clearRect(0,0,1000,500);
+
+ctx.restore();
+
+
+
+
+/////ctx.translate   ctx.save()   ctx.restore() ctx.rotate()
+ctx.save();
+ctx.beginPath();
+ctx.translate(300,300);
+ctx.arc(0,0,30,0,Math.PI*2);
+for(var i=0;i<12;i++){
+	ctx.rotate(Math.PI/6);
+	ctx.moveTo(110,0);
+	ctx.arc(100,0,10,0,Math.PI*2);
+}
+ctx.stroke();
+ctx.restore();
+
+
+
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(100,100);
+ctx.lineTo(100,500);
+ctx.moveTo(100,100);
+ctx.lineTo(500,100);
+ctx.stroke();
+
+ctx.translate(100,100);
+ctx.rotate(Math.PI/3);
+ctx.fillRect(0,0,30,30);
+ctx.fill();
+
+ctx.fillRect(70,0,30,30);	
+ctx.restore();
+
+ctx.clearRect(0,0,1000,600);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////watch
+//ctx.save();
+/*var x,i=0;
+setInterval(function(){
+	x=Math.PI/30*i;
+	i++;
+	drawclock();
+},1000)*/
+//ctx.restore();
+var drawclock=function(){
+	var d=new Date();
+      var s=d.getSeconds();
+      var m=d.getMinutes();
+      var h=d.getHours();
+	ctx.clearRect(0,0,1000,600);
+      //保存一个干净的画布状态；
+      ctx.save();
+      
+     //移动画布圆点在中心
+     ctx.translate(500,250);
+    //画做外层表盘
+    ctx.save();
+
+    ctx.strokeStyle="blue";
+    ctx.lineWidth="8";
+    ctx.shadowOffsetX=-2;
+    ctx.shadowOffsetY=-2;
+    ctx.shadowBlur=2;
+    ctx.shadowColor="#000";
+    ctx.beginPath();
+    ctx.arc(0,0,200,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.restore();
+      //画时间刻度
+      ctx.save();
+      ctx.lineCap="round";
+      for(var i=1;i<61;i++){
+      	ctx.rotate(Math.PI/30);
+      	ctx.beginPath();
+      	if(i%5==0){
+      		ctx.lineWidth=5;
+      		ctx.moveTo(157,0);
+      	}
+      	else{
+      		ctx.lineWidth=2;
+      		ctx.moveTo(177,0);
+      	}
+      	ctx.lineTo(187,0);
+      	ctx.stroke();
+      }
+      ctx.restore();
+ //画时针
+     ctx.save();
+
+     ctx.rotate((360*((h*3600+m*60+s)/(12*3600)))/180*Math.PI);
+     ctx.beginPath();
+     ctx.lineWidth=10;
+     ctx.moveTo(0,20);
+     ctx.lineTo(0,-100);
+     ctx.stroke();
+
+     ctx.restore();
+       //画分针
+     ctx.save();
+
+     ctx.rotate((360*(m*60+s)/3600)/180*Math.PI);
+     ctx.beginPath();
+     ctx.lineWidth=5;
+     ctx.moveTo(0,20);
+     ctx.lineTo(0,-120);
+     ctx.stroke();
+
+     ctx.restore();
+      //画秒针
+      ctx.save();
+
+      ctx.rotate(Math.PI/30*s);
+      ctx.beginPath();
+      ctx.lineWidth=2;
+      ctx.strokeStyle="red";
+      ctx.moveTo(0,20);
+      ctx.lineTo(0,-160);
+      ctx.stroke();
+
+      ctx.restore();
+
+   
+    
+	/////复原画布的干净状态
+	ctx.restore();	
+	requestAnimationFrame(drawclock);
+}
+
+	requestAnimationFrame(drawclock);
+
+
+
+
+
+
+
+
+
+
+
+/*var aa=function(){
+	console.log(1);
+	requestAnimationFrame(aa);
+}
+requestAnimationFrame(aa);*/
